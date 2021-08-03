@@ -1,8 +1,27 @@
+let googleUserId;
+
+
+window.onload = (event) => {
+  // Use this to retain user state between html pages.
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      console.log('Logged in as: ' + user.displayName);
+      googleUserId = user.uid;
+      getProfile(googleUserId);
+    } else {
+      // If not logged in, navigate back to login page.
+      window.location = 'index.html'; 
+    };
+  });
+};
+const modal;
 const addFriendModal = () => {
-    document.querySelector("#addFriendModal").classList.add("is-active");
+    modal = document.querySelector("#addFriendModal");
+    modal.classList.add("is-active");
+
 }
 const closeModal = () => {
-    document.querySelector("#addFriendModal").classList.remove("is-active");
+    modal.classList.remove("is-active");
 }
 
 
@@ -47,28 +66,13 @@ const saveChanges = () => {
        
 
 
-let googleUserId;
 
-
-window.onload = (event) => {
-  // Use this to retain user state between html pages.
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      console.log('Logged in as: ' + user.displayName);
-      googleUserId = user.uid;
-      getProfile(googleUserId);
-    } else {
-      // If not logged in, navigate back to login page.
-      window.location = 'index.html'; 
-    };
-  });
-};
 
 
 
 
 const createProfile = () => {
-    firebase.database().ref(`users/${googleUser.uid}`).push({
+    firebase.database().ref(`users/${googleUserId}`).push({
         name: document.querySelector("#name").value,
         image: document.querySelector("#imageUrl").value,
         birthday: document.querySelector("#birthday").value,
@@ -77,21 +81,22 @@ const createProfile = () => {
   .then(() => {
     document.querySelector("#name").value = "";
     document.querySelector("#imageUrl").value = "";
-    document.querySelector("#birthday").value = "";
+    document.querySelector("#birthday").value = "";closeModal();
   });
   
-  closeModal();
+  
 
   
   
 }
 
 const getProfile = (userId) => {
-  const profileRef = firebase.database().ref(`users/${userId}`);
+    console.log(userId)
+  /*const profileRef = firebase.database().ref(`users/${userId}`);
   profileRef.on('value', (snapshot) => {
     const data = snapshot.val();
     renderData(data);
-  });
+  });*/
 };
 
 const renderData = (data) => {
