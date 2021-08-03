@@ -4,6 +4,27 @@ const addFriendModal = () => {
 const closeModal = () => {
     document.querySelector("#addFriendModal").classList.remove("is-active");
 }
+
+
+
+/* addfriend /saveChanges
+const saveChanges = () => {
+    //console.log("edit" + profileId);
+    const editProfileNameInput = document.querySelector("#editProfileNameInput");
+    const editProfileTextInput = document.querySelector("#editProfileTextInput");
+    const editProfileId = document.querySelector("#editProfileId");
+
+    const name = editProfileNameInput.value;
+    const text = editProfileTextInput.value;
+    const profileId = editProfileId.value;
+
+    const profileToEdit = firebase.database().ref(`users/${googleUserId}/${profileId}`);
+    profileToEdit.update({
+        name: name,
+        text: text,
+    });
+  */
+
 // Google api console clientID and apiKey 
 
  var clientId = '527545903091-ab69g0d920goo8m76hqv52akr249cqf5.apps.googleusercontent.com';
@@ -23,17 +44,12 @@ const closeModal = () => {
   function checkAuth() {
     gapi.auth.authorize({ client_id: clientId, scope: scopes, immediate: true }, handleAuthResult);
         }
+       
 
-
-<<<<<<< HEAD
-                  //  "resource": resource     // above resource will be passed here
-                });               
-})
-}
 
 let googleUserId;
 googleUserId = user.uid;
-getNotes(googleUserId);
+getProfile(googleUserId);
 /*
 window.onload = (event) => {
   // Use this to retain user state between html pages.
@@ -49,15 +65,18 @@ window.onload = (event) => {
   });
 };
 */
-const getProfiles = (userId) => {
-  const profileRef = firebase.database().ref(`users/${userId}`);
-  profileRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-    renderData(data);
-  });
-};
 
 
+
+const createProfile = () => {
+  const profileRef = firebase.database().ref(`users/${googleUserId}`);
+  profileRef.push({
+    name: document.querySelector("#name").value,
+    image: document.querySelector("#imageUrl").value,
+    birthday: document.querySelector("#birthday").value,
+  })
+  
+}
 
 const getProfile = (userId) => {
   const profileRef = firebase.database().ref(`users/${userId}`);
@@ -84,12 +103,12 @@ const createCard = (profile, profileId) => {
                 <div class="card" id="noteId"> 
                     <header class="card-header"> 
                         <p class="card-header-title"> 
-                            ${profile.title} 
+                            ${profile.name} 
                         </p> 
                     </header> 
                     <div class="card-content"> 
                         <div class="content">
-                            ${profile.text} 
+                            ${profile.birthday} 
                         </div>
                         <div class = "card-footer">
 
@@ -127,7 +146,7 @@ const editProfile = (profileId) => {
     profileToEdit.on("value", (snapshot) => {
         const profile = snapshot.val();
         const editProfileModal = document.querySelector("#editProfileModal");
-        const editProfileTitleInput = document.querySelector("#editProfileTitleInput");
+        const editProfileNameInput = document.querySelector("#editProfileNameInput");
         const editProfileTextInput = document.querySelector("#editProfileTextInput");
 
         document.querySelector("#editProfileId").value = profileId;        
@@ -136,34 +155,14 @@ const editProfile = (profileId) => {
     });
 };
 
-const closeModal = (profileId) => {
-    //console.log("edit" + profileId);
-    const closeProfileModal = document.querySelector("#editProfileModal");
-    editProfileModal.classList.remove("is-active");
-};
 
 
-const saveChanges = () => {
-    //console.log("edit" + profileId);
-    const editProfileTitleInput = document.querySelector("#editProfileTitleInput");
-    const editProfileTextInput = document.querySelector("#editProfileTextInput");
-    const editProfileId = document.querySelector("#editProfileId");
 
-    const title = editProfileTitleInput.value;
-    const text = editProfileTextInput.value;
-    const profileId = editProfileId.value;
-
-    const profileToEdit = firebase.database().ref(`users/${googleUserId}/${profileId}`);
-    profileToEdit.update({
-        title: title,
-        text: text,
-    });
 
     closeModal();
-};
-=======
+
   document.addEventListener('DOMContentLoaded', function() {
     var birthday = document.getElementById('birthday');
-    var instances = M.Datepicker.init(elems, );
+    var instances = M.Datepicker.init(elems );
   });
->>>>>>> 4e1e7f2397341fccef4a45ae666fba2fd766cf3c
+

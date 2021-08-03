@@ -5,52 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Birthday Profiles</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
 	  <link rel="stylesheet" href="css/writeNote.css">
     <!-- update the version number as needed -->
+    <script src="js/viewprofiles.js"></script>
     <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-    <script src="js/viewprofiles.js"></script>
+    
   </head>
   <body>
 
     <section class="hero is-fullheight">
       <div class="hero-body">
         <div class="container has-text-centered">
-          <div class="columns is-8 is-variable ">
+          <div class="column is-variable ">
             
-            <!-- WELCOME HERO -->
-            <!--
-            <div class="column is-two-thirds has-text-left">
-              <h1 class="title is-1">What's on your mind?</h1>
-              <h1 class="title is-3">
-                “The most beautiful things are those that madness prompts and reason writes."
-              </h1>
-              <h1 class="subtitle is-5">
-                —Andre Gide
-              </h1>
-              <a><button class="button is-link has-text-weight-medium is-medium is-centered">Click Here</button></a>
-              to view your notes.
-            </div>
-            -->
             <div>
-              <h1 class="title is-2">
+              <h1 class="title is-half center">
                 Welcome to Birthday Profiles!🎂
               </h1>
-<<<<<<< HEAD
-              <h3> view your current friend profiles below! if you would like to create a new friend profile? click the button </h3> 
-              <button class="button is-medium is-info is-outlined" id="addBtn" onclick="addFriendModal()">
-=======
+
               <h3>View your current friend profiles below! if you would like to create a new friend profile? click the button </h3> 
-              <button class="button is-medium is-info is-outlined" onclick="addFriendModal()">
->>>>>>> 4e1e7f2397341fccef4a45ae666fba2fd766cf3c
+              <button class="button is-medium is-info is-outlined center mt-4" onclick="addFriendModal()">
                  Click Here to Add a Friend +
-              </button>      
+              </button> 
+              <hr>
               <div id="app" class="columns is-multiline">
           <!-- profiles cards will render here -->
              </div>        
@@ -64,16 +47,24 @@
                     <div class="modal-card">
                         <header class="modal-card-head">
                             <p class="modal-card-title">Add Friend</p>
-                            <button class="delete" aria-label="close"></button>
+                            <button class="delete" aria-label="close" onclick="closeModal()"></button>
                         </header>
                         <section class="modal-card-body">
-                        <!-- Content ... -->
+                          
+                           <!-- Content ... -->
                             <div class="field">
                                 <label class="label" for="name">Name</label>
                                 <div class="control">
                                     <input class="input is-medium" type="text" id="name">
                                 </div>
                             </div>
+                                                                                        
+                           <div class="field">
+                                <label class="label" for="imageUrl">Image Url</label>
+                                <div class="control">
+                                    <input class="input is-medium" type="text" id="imageUrl">
+                                </div>
+                            </div>                                                             
 
                             <div class="field">
                                 <label class="label" for="birthday">Birthday</label>
@@ -85,7 +76,7 @@
                         <footer class="modal-card-foot">
 
                             <button class="button is-link is-half has-text-weight-medium is-medium" onclick="closeModal()">Close</button>
-                            <button class="button is-link is-success is-half has-text-weight-medium is-medium" onclick="">Create Profile</button>
+                            <button class="button is-link is-success is-half has-text-weight-medium is-medium" onclick="createProfile()">Create Profile</button>
                         </footer>
                         
                     </div>
