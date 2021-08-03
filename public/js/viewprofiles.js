@@ -1,4 +1,9 @@
-
+const addFriendModal = () => {
+    document.querySelector("#addFriendModal").classList.add("is-active");
+}
+const closeModal = () => {
+    document.querySelector("#addFriendModal").classList.remove("is-active");
+}
 // Google api console clientID and apiKey 
 
  var clientId = '527545903091-ab69g0d920goo8m76hqv52akr249cqf5.apps.googleusercontent.com';

@@ -42,29 +42,36 @@
               <h1 class="title is-2">
                 Welcome to Birthday Profiles!🎂
               </h1>
-              <h3> view your current friend profiles below! if you would like to create a new friend profile? click the button </h3> 
+              <h3>View your current friend profiles below! if you would like to create a new friend profile? click the button </h3> 
               <button class="button is-medium is-info is-outlined" onclick="addFriendModal()">
                  Click Here to Add a Friend +
               </button>              
             </div>
 
             <!-- Birthday FORM -->
-            <div class="column is-half">
-              <div class="field">
-                <label class="label">Name</label>
-                <div class="control">
-                  <input class="input is-medium" type="text" id="name">
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Birthday</label>
-                <div class="control">
-                  <textarea class="textarea is-medium" id="birthday"></textarea>
-                </div>
-              </div>
-              <div class="control">
-                <button class="button is-link is-fullwidth has-text-weight-medium is-medium" onclick="">Create Profile</button>
-              </div>
+            <div class="modal" id="addFriendModal">
+                <div class="modal-background"> 
+                    <div class="modal-content">
+                        <div class="field">
+                            <label class="label" for="nameName</label>
+                            <div class="control">
+                            <input class="input is-medium" type="text" id="name">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="birthday">Birthday</label>
+                            <div class="control">
+                            <input class="input is-medium is-half" type="date" id="birthday"></input>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link is-half has-text-weight-medium is-medium" onclick="closeModal()">Close</button>
+                            <button class="button is-link is-success is-half has-text-weight-medium is-medium" onclick="">Create Profile</button>
+                            
+                        </div>
+                    </div>
+                </div>   
+                
             </div>
             
           </div>
