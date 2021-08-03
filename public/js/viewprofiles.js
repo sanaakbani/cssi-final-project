@@ -68,3 +68,134 @@ gapi.client.load('calendar', 'v3', function () { // load the calendar api (versi
                 });               
 })
 }
+
+let googleUserId;
+googleUserId = user.uid;
+getNotes(googleUserId);
+/*
+window.onload = (event) => {
+  // Use this to retain user state between html pages.
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      console.log('Logged in as: ' + user.displayName);
+      googleUserId = user.uid;
+      getNotes(googleUserId);
+    } else {
+      // If not logged in, navigate back to login page.
+      window.location = 'index.html'; 
+    };
+  });
+};
+*/
+const getProfiles = (userId) => {
+  const profileRef = firebase.database().ref(`users/${userId}`);
+  profileRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    renderData(data);
+  });
+};
+
+
+
+const getProfile = (userId) => {
+  const profileRef = firebase.database().ref(`users/${userId}`);
+  profileRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    renderData(data);
+  });
+};
+
+const renderData = (data) => {
+    const destination = document.querySelector('#app');
+    destination.innerHTML = "";
+    for (let key in data) {
+        const profile = data[key];
+        //adds text on to the string already
+        destination.innerHTML += createCard(profile, key);
+    }
+};
+
+
+
+const createCard = (profile, profileId) => {
+    return `<div class="column is-one-quarter">
+                <div class="card" id="noteId"> 
+                    <header class="card-header"> 
+                        <p class="card-header-title"> 
+                            ${profile.title} 
+                        </p> 
+                    </header> 
+                    <div class="card-content"> 
+                        <div class="content">
+                            ${profile.text} 
+                        </div>
+                        <div class = "card-footer">
+
+                             <a href="#"
+                               class= "card-footer-item"
+                               onclick="editNote('${profileId}')">
+                                Edit</a>
+
+                            <a href="#"
+                               class= "card-footer-item"
+                               onclick="deleteNote('${profileId}')">
+                                Delete</a>
+                                
+                        </div>
+
+
+                    </div> 
+                </div>
+            </div>`;
+};
+
+const deleteProfile= (profileId) => {
+    
+    const profileToDelete = firebase.database().ref(`users/${googleUserId}/${profileId}`);
+    console.log("function worked");
+     profileToDelete.remove();
+
+}
+
+
+
+const editProfile = (profileId) => {
+    //console.log("edit" + profileId);
+    const profileToEdit = firebase.database().ref(`users/${googleUserId}/${profileId}`);
+    profileToEdit.on("value", (snapshot) => {
+        const profile = snapshot.val();
+        const editProfileModal = document.querySelector("#editProfileModal");
+        const editProfileTitleInput = document.querySelector("#editProfileTitleInput");
+        const editProfileTextInput = document.querySelector("#editProfileTextInput");
+
+        document.querySelector("#editProfileId").value = profileId;        
+    
+    editProfileModal.classList.add("is-active");
+    });
+};
+
+const closeModal = (profileId) => {
+    //console.log("edit" + profileId);
+    const closeProfileModal = document.querySelector("#editProfileModal");
+    editProfileModal.classList.remove("is-active");
+};
+
+
+const saveChanges = () => {
+    //console.log("edit" + profileId);
+    const editProfileTitleInput = document.querySelector("#editProfileTitleInput");
+    const editProfileTextInput = document.querySelector("#editProfileTextInput");
+    const editProfileId = document.querySelector("#editProfileId");
+
+    const title = editProfileTitleInput.value;
+    const text = editProfileTextInput.value;
+    const profileId = editProfileId.value;
+
+    const profileToEdit = firebase.database().ref(`users/${googleUserId}/${profileId}`);
+    profileToEdit.update({
+        title: title,
+        text: text,
+    });
+
+    closeModal();
+};
