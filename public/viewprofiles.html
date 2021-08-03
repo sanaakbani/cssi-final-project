@@ -52,24 +52,31 @@
 <<<<<<< HEAD
             <div class="modal" id="addFriendModal">
                 <div class="modal-background"> 
-                    <div class="modal-content">
-                        <div class="field">
-                            <label class="label" for="nameName</label>
-                            <div class="control">
-                            <input class="input is-medium" type="text" id="name">
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">Add Friend</p>
+                            <button class="delete" aria-label="close"></button>
+                        </header>
+                        <section class="modal-card-body">
+                        <!-- Content ... -->
+                            <div class="field">
+                                <label class="label" for="name">Name</label>
+                                <div class="control">
+                                <input class="input is-medium" type="text" id="name">
+                                </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <label class="label" for="birthday">Birthday</label>
-                            <div class="control">
-                            <input class="input is-medium is-half" type="date" id="birthday"></input>
+                            <div class="field">
+                                <label class="label" for="birthday">Birthday</label>
+                                <div class="control">
+                                <input class="input is-medium is-half" type="date" id="birthday"></input>
+                                </div>
                             </div>
-                        </div>
-                        <div class="control">
+                        </section>
+                        <footer class="modal-card-foot">
                             <button class="button is-link is-half has-text-weight-medium is-medium" onclick="closeModal()">Close</button>
                             <button class="button is-link is-success is-half has-text-weight-medium is-medium" onclick="">Create Profile</button>
-                            
-                        </div>
+                        </footer>
+                        
                     </div>
                 </div>   
                 
@@ -83,3 +90,21 @@
 
   </body>
 </html>
+
+
+<div class="field">
+                            <label class="label" for="nameName</label>
+                            <div class="control">
+                            <input class="input is-medium" type="text" id="name">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="birthday">Birthday</label>
+                            <div class="control">
+                            <input class="input is-medium is-half" type="date" id="birthday"></input>
+                            </div>
+                        </div>
+                        <div class="control">
+                            
+                            
+                        </div>
