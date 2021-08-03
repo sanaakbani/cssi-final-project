@@ -1,4 +1,9 @@
-
+const addFriendModal = () => {
+    document.querySelector("#addFriendModal").classList.add("is-active");
+}
+const closeModal = () => {
+    document.querySelector("#addFriendModal").classList.remove("is-active");
+}
 // Google api console clientID and apiKey 
 
  var clientId = '527545903091-ab69g0d920goo8m76hqv52akr249cqf5.apps.googleusercontent.com';
@@ -19,51 +24,8 @@
     gapi.auth.authorize({ client_id: clientId, scope: scopes, immediate: true }, handleAuthResult);
         }
 
-// This is the resource we will pass while calling api function
-// var resource = {
-//             "summary": "My Event",
-//             "start": {
-//                 "dateTime": today
-//             },
-//             "end": {
-//                 "dateTime": twoHoursLater
-//             },
-//             "description":"We are organizing events",
-//             "location":"US",
-//             "attendees":[
-//             {
-//                     "email":"attendee1@gmail.com",
-//                     "displayName":"Jhon",
-//                     "organizer":true,
-//                     "self":false,
-//                     "resource":false,
-//                     "optional":false,
-//                     "responseStatus":"needsAction",
-//                     "comment":"This is my demo event",
-//                     "additionalGuests":3
-//                     
-//             },
-//             {    
-//                 "email":"attendee2@gmail.com",
-//                     "displayName":"Marry",
-//                     "organizer":true,
-//                     "self":false,
-//                     "resource":false,
-//                     "optional":false,
-//                     "responseStatus":"needsAction",
-//                     "comment":"This is an official event",
-//                     "additionalGuests":3
-//             }
-//             ],
-//         };
 
-function makeApiCall(){
-gapi.client.load('calendar', 'v3', function () { // load the calendar api (version 3)
-                var request = gapi.client.calendar.events.insert
-                ({
-                  //  'calendarId': '24tn4fht2tr6m86efdiqqlsedk@group.calendar.google.com', 
-// calendar ID which id of Google Calendar where you are creating events. this can be copied from your Google Calendar user view.
-
+<<<<<<< HEAD
                   //  "resource": resource     // above resource will be passed here
                 });               
 })
@@ -199,3 +161,9 @@ const saveChanges = () => {
 
     closeModal();
 };
+=======
+  document.addEventListener('DOMContentLoaded', function() {
+    var birthday = document.getElementById('birthday');
+    var instances = M.Datepicker.init(elems, );
+  });
+>>>>>>> 4e1e7f2397341fccef4a45ae666fba2fd766cf3c
