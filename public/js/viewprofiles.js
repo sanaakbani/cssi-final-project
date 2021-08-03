@@ -48,33 +48,41 @@ const saveChanges = () => {
 
 
 let googleUserId;
-googleUserId = user.uid;
-getProfile(googleUserId);
-/*
+
+
 window.onload = (event) => {
   // Use this to retain user state between html pages.
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       console.log('Logged in as: ' + user.displayName);
       googleUserId = user.uid;
-      getNotes(googleUserId);
+      getProfile(googleUserId);
     } else {
       // If not logged in, navigate back to login page.
       window.location = 'index.html'; 
     };
   });
 };
-*/
+
 
 
 
 const createProfile = () => {
-  const profileRef = firebase.database().ref(`users/${googleUserId}`);
-  profileRef.push({
-    name: document.querySelector("#name").value,
-    image: document.querySelector("#imageUrl").value,
-    birthday: document.querySelector("#birthday").value,
+    firebase.database().ref(`users/${googleUser.uid}`).push({
+        name: document.querySelector("#name").value,
+        image: document.querySelector("#imageUrl").value,
+        birthday: document.querySelector("#birthday").value,
   })
+  // 3. Clear the form so that we can write a new note
+  .then(() => {
+    document.querySelector("#name").value = "";
+    document.querySelector("#imageUrl").value = "";
+    document.querySelector("#birthday").value = "";
+  });
+  
+  closeModal();
+
+  
   
 }
 

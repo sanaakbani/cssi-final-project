@@ -1,16 +1,16 @@
-const signIn = () => {window.location = 'viewprofiles.html';
-  /*var provider = new firebase.auth.GoogleAuthProvider();
+const signIn = () => {
+  var provider = new firebase.auth.GoogleAuthProvider();
   // console.log(provider)
   firebase.auth()
   .signInWithPopup(provider)
   .then((result) => {
-    /** @type {firebase.auth.OAuthCredential} 
+    /* @type {firebase.auth.OAuthCredential} */
     var credential = result.credential;
     var token = credential.accessToken;
 
     // The signed-in user info.
     var user = result.user;
-    
+    window.location = 'viewprofiles.html';
   }).catch((error) => {
     // Handle Errors here.
     var errorCode = error.code;
@@ -27,5 +27,5 @@ const signIn = () => {window.location = 'viewprofiles.html';
     };
     console.log(err);
   });
-*/
+
 }
