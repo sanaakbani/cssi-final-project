@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Birthday Profiles</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css">
+	  <link rel="stylesheet" href="css/index.css">
+    <!-- update the version number as needed -->
+    
+    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script src="js/viewprofiles.js"></script>
+  </head>
+  <body>
+    
+    <section class="hero is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="columns is-8 is-variable ">
+
+            <!-- WELCOME HERO -->
+            <div class="column is-two-thirds has-text-left">
+              <h1 class="title is-1">Create a Profile for a Friend!🎂</h1>
+              <h1 class="title is-3">
+                Here you will be able to plan out gift ideas for upcoming birthdays
+              </h1>
+              <a href="viewNotes.html"><button class="button is-link has-text-weight-medium is-medium is-centered">Click Here</button></a>
+              to view your friend profiles
+            </div>
+
+            <!-- NOTE FORM -->
+            <div class="column is-one-third has-text-left">
+              <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                  <input class="input is-medium" type="text" id="profileName">
+                </div>
+              </div>
+              <div class="field">
+                <label class="file-label">
+                  
+                </label>
+                
+              </div>
+              <div class="field">
+                <div class="control">
+                  <textarea class="textarea is-medium" id="noteText"></textarea>
+                </div>
+                <a href="mailto:name@email.com">Remember to leave a cute message for them below!</a>
+              </div>
+              <div class="control">
+  
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

@@ -15,7 +15,11 @@
     <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-    <script src="js/viewprofiles.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.13.1/firebase-storage.js"></script>
+    <script defer src="js/viewprofiles.js"></script>
+    <script src="https://apis.google.com/js/platform.js" ></script>
+    <script src="https://apis.google.com/js/client:plusone.js" type="application/javascript"></script>
+    
   </head>
   <body>
 
@@ -58,13 +62,26 @@
                                     <input class="input is-medium" type="text" id="name">
                                 </div>
                             </div>
-                                                                                        
-                           <div class="field">
-                                <label class="label" for="imageUrl">Image Url</label>
-                                <div class="control">
-                                    <input class="input is-medium" type="text" id="imageUrl">
-                                </div>
-                            </div>                                                             
+                             
+                            <!--upload picture-->
+                            <div class="file is-normal is-boxed has-name is-centered" id="imageFile">
+                              <label class="file-label">
+                                <input class="file-input" type="file">
+                                <span class="file-cta">
+                                  <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                  </span>
+                                  <span class="file-label">
+                                    Upload Their Picture
+                                  </span>
+                                </span>
+                                <span class="file-name" id="fileNameLabel">
+                                  ...
+                                </span>
+                              </label>
+                            </div>
+                            <progress value="0" max="100" id="progress"></progress>
+                                                                                       
 
                             <div class="field">
                                 <label class="label" for="birthday">Birthday</label>
@@ -74,7 +91,6 @@
                             </div>
                         </section>
                         <footer class="modal-card-foot">
-
                             <button class="button is-link is-half has-text-weight-medium is-medium" onclick="closeModal()">Close</button>
                             <button class="button is-link is-success is-half has-text-weight-medium is-medium" onclick="createProfile()">Create Profile</button>
                         </footer>
