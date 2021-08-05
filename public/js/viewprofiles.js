@@ -1,6 +1,4 @@
-
 let googleUserId;
-
 
 window.onload = (event) => {
   // Use this to retain user state between html pages.
@@ -39,8 +37,24 @@ const addFriendModal = () => {
 const closeModal = () => {
   const modal = document.querySelector("#addFriendModal");
   modal.classList.remove("is-active");
+  document.querySelector("#name").value = "";
+  document.querySelector('#imageFile #fileNameLabel').value = ""
+  uploadedFile = "";
+  document.querySelector("#birthday").value = "";
 }
+
 const createCard = (profile, profileId) => {
+  let storageRef = firebase.storage().ref();
+  console.log(storageRef);
+  storageRef.child(`users/${profile.image}`).getDownloadURL()
+  .then((url) => {
+    // `url` is the download URL for 'images/stars.jpg'// Or inserted into an <img> element
+    console.log('image found', url);
+  })
+  .catch((error) => {
+    console.log('image not found', error);
+    // Handle any errors
+  });
   return `<div class="column is-one-quarter">
               <div class="card" id="noteId"> 
                   <header class="card-header"> 
@@ -50,18 +64,19 @@ const createCard = (profile, profileId) => {
                   </header> 
                   <div class="card-content"> 
                       <div class="content">
-                          ${profile.birthday} 
+                          <img src="${profile.image}" alt="friend's image">
+                          <p><strong>Birthday</strong>: ${profile.birthday}</p> 
                       </div>
                       <div class = "card-footer">
 
                            <a href="#"
                              class= "card-footer-item"
-                             onclick="editNote('${profileId}')">
+                             onclick="editProfile('${profileId}')">
                               Edit</a>
 
                           <a href="#"
                              class= "card-footer-item"
-                             onclick="deleteNote('${profileId}')">
+                             onclick="deleteProfile('${profileId}')">
                               Delete</a>
                               
                       </div>
@@ -71,38 +86,98 @@ const createCard = (profile, profileId) => {
               </div>
           </div>`;
 };
+const deleteProfile= (profileId) => {
+    
+    const profileToDelete = firebase.database().ref(`users/${googleUserId}/${profileId}`);
+    console.log("function worked");
+     profileToDelete.remove();
+
+}
 const fileInput = document.querySelector('#imageFile input[type=file]');
+let uploadedFile;
 fileInput.onchange = () => {
-    const fileName = document.querySelector('#imageFile #fileNameLabel');
-    fileName.textContent = fileInput.name;
+    let fullPath = fileInput.value;
+    const fileNameLabel = document.querySelector('#imageFile #fileNameLabel');
+    if (fullPath) { 
+      var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/')); 
+      let filename = fullPath.substring(startIndex); 
+      if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) { 
+        filename = filename.substring(1); 
+      } 
+      uploadedFile = filename;
+      fileNameLabel.innerHTML = filename;
+      filename="";
+     }
+     
 };
 
 const createProfile = () => {
-  
-  let storage = firebase.storage().ref(fileInput.name);
+  if(document.querySelector("#state").value != null) {
+    const profileToEdit = firebase.database().ref(`users/${googleUserId}/${document.querySelector("#state").value}`);
+    profileToEdit.update({
+        name: document.querySelector("#name").value,
+        image: uploadedFile,
+        birthday: document.querySelector("#birthday").value,
+    });
+    closeModal();
+    document.querySelector("#state").value = null;
+  } else {
+    let storage = firebase.storage().ref();
+    let uploader = document.getElementById("progress");
+    const fileRef = storage.child('users/' + uploadedFile);
+          //upload file
+    console.log(storage);
+    let task = fileRef.put(fileInput.files[0]);
+    task.on('state_changed', function progress(snapshot) {
+      var percentage = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+      uploader.value = percentage;
 
-        //upload file
-  let upload = storage.put(file);
+    }, function error(err) {
+        console.log("failed");
+        console.log(err);
 
-        //update progress b
+    },function complete() {
+        console.log("worked");
+    });
+
+          //update progress b
 
 
-  firebase.database().ref(`users/${googleUserId}`).push({
-      name: document.querySelector("#name").value,
-      image: document.querySelector("#imageUrl").value,
-      birthday: document.querySelector("#birthday").value,
-  });
-// 3. Clear the form so that we can write a new note
-  closeModal();
-  document.querySelector("#name").value = "";
-  //document.querySelector("#imageUrl").value = "";
-  document.querySelector("#birthday").value = "";
-
+    let dbRef = firebase.database().ref(`users/${googleUserId}`);
+    dbRef.push({
+        name: document.querySelector("#name").value,
+        image: uploadedFile,
+        birthday: document.querySelector("#birthday").value,
+    }).then(() => {
+  // 3. Clear the form so that we can write a new note
+    closeModal();
+    
+    });
+}
   
   
 
 };
 
+const editProfile = (profileId) => {
+    //console.log("edit" + profileId);
+    const profileToEdit = firebase.database().ref(`users/${googleUserId}/${profileId}`);
+    profileToEdit.on("value", (snapshot) => {
+        const profile = snapshot.val();
+        
+        const name = document.querySelector("#name");
+        const fileNameLabel = document.querySelector('#imageFile #fileNameLabel');
+        const birthday = document.querySelector("#birthday");
+
+        name.value = profile.name;
+        fileNameLabel.value = profile.image;
+        birthday.value = profile.birthday;
+        //document.querySelector("#editProfileId").value = profileId;        
+        document.querySelector("#addFriendModal").classList.add("is-active");
+        document.querySelector("#state").value = profileId;
+        
+    });
+};
 
 
 
@@ -205,29 +280,10 @@ gapi.load('client', initial);
     // });
 
 
-const deleteProfile= (profileId) => {
-    
-    const profileToDelete = firebase.database().ref(`users/${googleUserId}/${profileId}`);
-    console.log("function worked");
-     profileToDelete.remove();
-
-}
 
 
-const editProfile = (profileId) => {
-    //console.log("edit" + profileId);
-    const profileToEdit = firebase.database().ref(`users/${googleUserId}/${profileId}`);
-    profileToEdit.on("value", (snapshot) => {
-        const profile = snapshot.val();
-        const editProfileModal = document.querySelector("#editProfileModal");
-        const editProfileNameInput = document.querySelector("#editProfileNameInput");
-        const editProfileTextInput = document.querySelector("#editProfileTextInput");
 
-        document.querySelector("#editProfileId").value = profileId;        
-    
-    editProfileModal.classList.add("is-active");
-    });
-};
+
 
 
     closeModal();
