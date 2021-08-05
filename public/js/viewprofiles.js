@@ -1,3 +1,16 @@
+// Your web app's Firebase configuration
+var firebaseConfig = {
+  apiKey: "AIzaSyBf6K5IOel6hgmCik0LDRIfzn4N4I-TnSk",
+  authDomain: "birthday-profiles.firebaseapp.com",
+  databaseURL: "https://birthday-profiles-default-rtdb.firebaseio.com",
+  projectId: "birthday-profiles",
+  storageBucket: "birthday-profiles.appspot.com",
+  messagingSenderId: "113088435057",
+  appId: "1:113088435057:web:6858605a97e2f7a8059cd0"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
 let googleUserId;
 
 window.onload = (event) => {
@@ -6,14 +19,21 @@ window.onload = (event) => {
     if (user) {
       console.log('Logged in as: ' + user.displayName);
       googleUserId = user.uid;
+      document.querySelector("#state").value = null;
       getProfile(googleUserId);
     } else {
       // If not logged in, navigate back to login page.
-      window.location = 'index.html'; 
+      window.location = 'index.html';
     };
   });
 };
+const addFriendModal = () => {
+  const modal = document.querySelector("#addFriendModal");
+  modal.classList.add("is-active");
+
+}
 const getProfile = (userId) => {
+  
   console.log("logged in as user " + userId);
   const dbRef = firebase.database().ref(`users/${userId}`);
   dbRef.on('value', (snapshot) => {
@@ -26,14 +46,12 @@ const renderData = (data) => {
   for (let key in data) {
       const profile = data[key];
       //adds text on to the string already
-      destination.innerHTML += createCard(profile, key);
+      createCard(profile, key).then((e) => {
+        destination.innerHTML+=e;
+      });
   }
 };
-const addFriendModal = () => {
-  const modal = document.querySelector("#addFriendModal");
-  modal.classList.add("is-active");
 
-}
 const closeModal = () => {
   const modal = document.querySelector("#addFriendModal");
   modal.classList.remove("is-active");
@@ -43,48 +61,73 @@ const closeModal = () => {
   document.querySelector("#birthday").value = "";
 }
 
+let imageUrl;
+
 const createCard = (profile, profileId) => {
   let storageRef = firebase.storage().ref();
   console.log(storageRef);
-  storageRef.child(`users/${profile.image}`).getDownloadURL()
+  return storageRef.child(`users/${profile.image}`).getDownloadURL()
   .then((url) => {
     // `url` is the download URL for 'images/stars.jpg'// Or inserted into an <img> element
     console.log('image found', url);
+    imageUrl = url;
+    birthdateFormat = profile.birthday;
+    console.log(birthdateFormat);
+    return `<a onclick="openProfile('${profileId}')">
+              <div class="column is-one-quarter">
+                <div class="card" id="noteId"> 
+                    <header class="card-header"> 
+                        <p class="card-header-title"> 
+                            ${profile.name} 
+                        </p> 
+                    </header> 
+                    <div class="card-content"> 
+                        <div class="content">
+                            <img src="${imageUrl}" alt="friend's image">
+                            <p><strong>Birthday</strong>: ${profile.birthday}</p> 
+                        </div>
+
+                        <h2>Birthday Countdown!</h2>
+                         <div id="timer">
+                          <div>
+                            <span class="days"></span>
+                            <div class="text">Days</div>
+                          </div>
+                          <div>
+                            <span class="hours"></span>
+                            <div class="text">Hours</div>
+                          </div>
+                          <div>
+                            <span class="minutes"></span>
+                            <div class="text">Minutes</div>
+                          </div>
+                          <div>
+                            <span class="seconds"></span>
+                            <div class="text">Seconds</div>
+                          </div>
+                        </div>
+                          
+                        <div class = "card-footer">
+
+                            <a href="#"
+                              class= "card-footer-item"
+                              onclick="deleteProfile('${profileId}')">
+                                Delete</a>
+                                
+                        </div>
+
+
+                    </div> 
+                </div>
+            </div>
+          </a>`;
+          
   })
   .catch((error) => {
     console.log('image not found', error);
     // Handle any errors
   });
-  return `<div class="column is-one-quarter">
-              <div class="card" id="noteId"> 
-                  <header class="card-header"> 
-                      <p class="card-header-title"> 
-                          ${profile.name} 
-                      </p> 
-                  </header> 
-                  <div class="card-content"> 
-                      <div class="content">
-                          <img src="${profile.image}" alt="friend's image">
-                          <p><strong>Birthday</strong>: ${profile.birthday}</p> 
-                      </div>
-                      <div class = "card-footer">
-
-                           <a href="#"
-                             class= "card-footer-item"
-                             onclick="editProfile('${profileId}')">
-                              Edit</a>
-
-                          <a href="#"
-                             class= "card-footer-item"
-                             onclick="deleteProfile('${profileId}')">
-                              Delete</a>
-                              
-                      </div>
-
-
-                  </div> 
-              </div>
-          </div>`;
+  
 };
 const deleteProfile= (profileId) => {
     
@@ -92,6 +135,9 @@ const deleteProfile= (profileId) => {
     console.log("function worked");
      profileToDelete.remove();
 
+}
+const openProfile= (profileId) => {
+  window.location = `writeprofiles.html?id=${profileId}`
 }
 const fileInput = document.querySelector('#imageFile input[type=file]');
 let uploadedFile;
@@ -112,16 +158,7 @@ fileInput.onchange = () => {
 };
 
 const createProfile = () => {
-  if(document.querySelector("#state").value != null) {
-    const profileToEdit = firebase.database().ref(`users/${googleUserId}/${document.querySelector("#state").value}`);
-    profileToEdit.update({
-        name: document.querySelector("#name").value,
-        image: uploadedFile,
-        birthday: document.querySelector("#birthday").value,
-    });
-    closeModal();
-    document.querySelector("#state").value = null;
-  } else {
+  
     let storage = firebase.storage().ref();
     let uploader = document.getElementById("progress");
     const fileRef = storage.child('users/' + uploadedFile);
@@ -133,7 +170,7 @@ const createProfile = () => {
       uploader.value = percentage;
 
     }, function error(err) {
-        console.log("failed");
+        console.log("failed image upload");
         console.log(err);
 
     },function complete() {
@@ -153,10 +190,6 @@ const createProfile = () => {
     closeModal();
     
     });
-}
-  
-  
-
 };
 
 const editProfile = (profileId) => {
@@ -178,6 +211,8 @@ const editProfile = (profileId) => {
         
     });
 };
+
+
 
 
 
@@ -220,19 +255,19 @@ const saveChanges = () => {
            window.setTimeout(checkAuth, 1);
         }
 
-function initial(){
-  // 2. Initialize the JavaScript client library.
-  gapi.client.init({
-    'apiKey': apiKey,
-    // Your API key will be automatically added to the Discovery Document URLs.
-    'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
-    // clientId and scope are optional if auth is not required.
-    'clientId': clientId +'.apps.googleusercontent.com',
-    'scope': scopes,
-  })
-};
-// 1. Load the JavaScript client library.
-gapi.load('client', initial);
+// function initial(){
+//   // 2. Initialize the JavaScript client library.
+//   gapi.client.init({
+//     'apiKey': apiKey,
+//     // Your API key will be automatically added to the Discovery Document URLs.
+//     'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+//     // clientId and scope are optional if auth is not required.
+//     'clientId': clientId +'.apps.googleusercontent.com',
+//     'scope': scopes,
+//   })
+// };
+// // 1. Load the JavaScript client library.
+// gapi.load('client', initial);
 
 
 //To authenticate
@@ -279,17 +314,52 @@ gapi.load('client', initial);
     //   appendPre('Event created: ' + event.htmlLink);
     // });
 
-
-
-
-
-
-
-
     closeModal();
 
   document.addEventListener('DOMContentLoaded', function() {
-    var birthday = document.getElementById('birthday');
-    var instances = M.Datepicker.init(elems );
+    let birthday = document.getElementById('birthday');
+    let instances = M.Datepicker.init(birthday);
   });
 
+
+//countdown
+function initializeTimer(endtime) {
+  console.log(document.querySelector('.days'));
+  const daysSpan = document.querySelector('.days');
+  const hoursSpan = document.querySelector('.hours');
+  const minutesSpan = document.querySelector('.minutes');
+  const secondsSpan = document.querySelector('.seconds');
+
+  function updateClock() {
+    const t = countdown(endtime);
+
+    daysSpan.innerHTML = t.days;
+    hoursSpan.innerHTML = ('0' + t.hours);
+    minutesSpan.innerHTML = ('0' + t.minutes);
+    secondsSpan.innerHTML = ('0' + t.seconds);
+
+  }
+
+  updateClock();
+  //const timeinterval = setInterval(updateClock, 1000);
+}
+
+const countdown = (birthdate) => {
+    const timeRemaining = Date.parse(birthdate) - (Date.parse(new Date()));
+    const seconds = Math.floor((timeRemaining/1000) / 60);
+    const minutes = Math.floor((timeRemaining/1000/60) / 60);
+    const hours = Math.floor((timeRemaining/(1000*60*60)) / 24);
+    const days = Math.floor((timeRemaining/(1000*60*60*24)));
+    
+    return {
+      timeRemaining,
+      days,
+      hours,
+      minutes,
+      seconds
+    };
+}
+
+// console.log(birthdate);
+// initializeTimer(birthdate);
+//

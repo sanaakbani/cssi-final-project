@@ -10,12 +10,14 @@
 	  <link rel="stylesheet" href="css/index.css">
     <!-- update the version number as needed -->
     
-    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
-    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-    <script src="js/viewprofiles.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+    
+    <script defer src="https://www.gstatic.com/firebasejs/8.8.1/firebase-storage.js"></script>
+    <!-- <script defer src="/__/firebase/init.js?useEmulator=true"></script> -->
+    
   </head>
   <body>
     
@@ -25,35 +27,50 @@
           <div class="columns is-8 is-variable ">
 
             <!-- WELCOME HERO -->
-            <div class="column is-two-thirds has-text-left">
-              <h1 class="title is-1">Create a Profile for a Friend!🎂</h1>
-              <h1 class="title is-3">
-                Here you will be able to plan out gift ideas for upcoming birthdays
-              </h1>
-              <a href="viewNotes.html"><button class="button is-link has-text-weight-medium is-medium is-centered">Click Here</button></a>
-              to view your friend profiles
-            </div>
+           <div class="row is-half"> 
+             <!-- displays image     TEST IMAGE-->
+            <div class="column is-two-thirds ">
+              <figure class=" image  is-1by1 ">
+                <img id="imageCon" src="" alt="Your Firend's Image">
+              </figure>
 
-            <!-- NOTE FORM -->
-            <div class="column is-one-third has-text-left">
-              <div class="field">
-                <label for="name" id="name">`${name.text}`<label>
-              </div>
-              <div class="field">
-                <label class="file-label">
-                  
-                </labe
-                
-              </div>
+              <!--gift ideas section-->
               <div class="field">
                 <div class="control">
-                  <textarea class="textarea is-medium" id="noteText"></textarea>
+                  <label>Gift Ideas</label>
+                  <textarea class="textarea is-medium" id="giftText"></textarea>
                 </div>
+                <button class="button is-link has-text-weight-medium is-medium is-centered" onClick="saveChanges">
+                  Save Changes
+                </button>
+
                 <a href="mailto:name@email.com">Remember to leave a cute message for them below!</a>
               </div>
-              <div class="control">
-  
-              </div>
+            
+              
+            </div>
+           </div>
+            <!-- Banner info section -->
+          <div class="row is-one-half">
+            <div class="column has-text-left">
+              <!--banner-->
+              <div class="column is-three-fifths has-text-right">
+                <h1 class="title is-1 has-text-centered" for="name" id="name"> </h1>
+                <h1 class="title is-3"> Days until Birthday: </h1>div>
+                <h1 class="title is-5  has-text-centered">
+                  Here you will be able to plan out gift ideas for their upcoming birthdays
+                </h1>
+                <a href="viewprofiles.html">
+                <button class="button is-link has-text-weight-medium is-medium is-centered" >
+                  Click Here to view your friend profiles
+                </button></a>
+             </div>
+
+              
+
+
+
+
             </div>
             
           </div>
@@ -61,4 +78,5 @@
       </div>
     </section>
   </body>
+  <script defer src="js/writeprofiles.js"></script>
 </html>
