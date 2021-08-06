@@ -207,8 +207,9 @@ const createProfile = () => {
     }).then(() => {
   // 3. Clear the form so that we can write a new note
     closeModal();
-    
+    window.location = "viewprofiles.html"
     });
+
 };
 
 
