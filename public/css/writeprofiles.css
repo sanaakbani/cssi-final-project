@@ -1,0 +1,26 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #0F183F;
+    
+
+}
+
+
+.hero{
+
+    padding: 50px;
+    margin: 20px;
+
+
+}
+
+
+
+h1{
+    color: #ffffff;
+}
+
+.daysTimer {
+    font-size: 5rem;
+}

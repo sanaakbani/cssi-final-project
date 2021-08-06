@@ -7,7 +7,7 @@
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css">
-	  <link rel="stylesheet" href="css/index.css">
+	  <link rel="stylesheet" href="css/writeprofiles.css">
     <!-- update the version number as needed -->
     
     <script defer src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
@@ -19,62 +19,90 @@
     <!-- <script defer src="/__/firebase/init.js?useEmulator=true"></script> -->
     
   </head>
-  <body>
+  <body class="body">
     
-    <section class="hero is-fullheight">
+    <section class="hero is-fullheight has-background-primary">
       <div class="hero-body">
-        <div class="container has-text-centered">
-          <div class="columns is-8 is-variable ">
+        <div class="container is-fullhd has-text-centered">
 
-            <!-- WELCOME HERO -->
-           <div class="row is-half"> 
-             <!-- displays image     TEST IMAGE-->
-            <div class="column is-two-thirds ">
-              <figure class=" image  is-1by1 ">
-                <img id="imageCon" src="" alt="Your Firend's Image">
-              </figure>
+          <section class="section">
+            <h1 class="title is-1  has-text-centered">
+              Plan Out Your Friend's Special Day!
+            </h1>
+            <a href="viewprofiles.html">
+            <button class="button is-link has-text-weight-medium is-medium is-centered" >
+              View Other Friends
+            </button></a>
+          </section>
 
-              <!--gift ideas section-->
-              <div class="field">
-                <div class="control">
-                  <label>Gift Ideas</label>
-                  <textarea class="textarea is-medium" id="giftText"></textarea>
-                </div>
-                <button class="button is-link has-text-weight-medium is-medium is-centered" onClick="saveChanges">
-                  Save Changes
-                </button>
-
-                <a href="mailto:name@email.com">Remember to leave a cute message for them below!</a>
+          <div class="tile is-ancestor is-12">
+              <div class="tile is-4 is-parent is-primary">
+                <!-- <article class=""> -->
+                  <figure class="image tile is-child is-success has-text-centered box">
+                    <img id="imageCon" src="" alt="Your Friend's Image">
+                  </figure>
+                
+                
               </div>
-            
-              
-            </div>
-           </div>
-            <!-- Banner info section -->
-          <div class="row is-one-half">
-            <div class="column has-text-left">
-              <!--banner-->
-              <div class="column is-three-fifths has-text-right">
-                <h1 class="title is-1 has-text-centered" for="name" id="name"> </h1>
-                <h1 class="title is-3"> Days until Birthday: </h1>div>
-                <h1 class="title is-5  has-text-centered">
-                  Here you will be able to plan out gift ideas for their upcoming birthdays
-                </h1>
-                <a href="viewprofiles.html">
-                <button class="button is-link has-text-weight-medium is-medium is-centered" >
-                  Click Here to view your friend profiles
-                </button></a>
-             </div>
+              <div class="tile has-text-left is-parent">
+                <div class="tile is-child box">
+                  <h1 class="title is-2" for="name" id="name"></h1><br>
+                  <h1 class="title is-3">Days until Birthday:</h1><br>
+                  
+                    <h1 class="daysTimer title">
 
-              
-
-
-
-
-            </div>
-            
+                    </h1>
+                  
+                </div>
+              </div>
           </div>
-        </div>
+          
+          <div class="tile is-ancestor is-12">
+            <div class="tile is-parent is-4">
+              <div class="tile is-child box">
+                <div class="field">
+                  <div class="control">
+                    <label class="title is-4">Gift Ideas</label><br><br>
+                    <textarea class="textarea is-medium" id="giftText"></textarea>
+                  </div><hr>
+                  <button class="button is-link has-text-weight-medium is-medium is-centered" onClick="saveMessage()">
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="tile is-parent is-8">
+              <div class="tile is-child box">
+                <label class="title is-4">Write a sweet message to send through email on their birthday!</label>
+                <br><br>
+                <div class="field">
+                  <p class="control has-icons-left has-icons-right">
+                    <input class="input" type="email" placeholder="Email" required>
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-envelope"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                      <i class="fas fa-check"></i>
+                    </span>
+                  </p>
+                </div>
+                <br>
+                <textarea class="textarea is-success" placeholder="Lovely message in email format" id="message" required></textarea>
+                <hr>
+                <div class="columns">
+                  <div class="column control">
+                    <button class="button is-link has-text-weight-medium is-medium" onClick="saveMessage()">Save Message</button>
+                  </div>
+                  <div class="column control">
+                    <button class="button is-primary has-text-weight-medium is-medium" onClick="sendMessage()">Send Message</button>
+                  </div>
+                </div>
+                  
+              </div>
+            </div>
+          </div>
+
+        </div>  
       </div>
     </section>
   </body>

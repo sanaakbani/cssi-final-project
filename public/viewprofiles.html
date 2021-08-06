@@ -32,18 +32,18 @@
   </head>
   <body>
 
-    <section class="hero is-fullheight">
+    <section class="hero is-fullheight has-background-primary">
       <div class="hero-body">
         <div class="container has-text-centered">
           <div class="column is-variable ">
             
             <div>
-              <h1 class="title is-half center">
+              <h1 class="title is-half center is-2">
                 Welcome to Birthday Profiles!🎂
               </h1>
 
-              <h3>View your current friend profiles below! if you would like to create a new friend profile? click the button </h3> 
-              <button class="button is-medium is-info is-outlined center mt-4" onclick="addFriendModal()">
+              <h3 class="title is-4">View your current friend profiles below! if you would like to create a new friend profile? click the button </h3> 
+              <button class="button is-link has-text-weight-medium is-medium is-centered mt-4" onclick="addFriendModal()">
                  Click Here to Add a Friend +
               </button> 
               <hr>
@@ -93,24 +93,14 @@
                                                                                        
 
                             <div class="field">
-                                <label class="label" for="birthday">Birthday</label>
+                                <label class="label" for="birthday">Select their next Birthday!</label>
                                 <div class="input-field" placeholder="Birthday">
-                                    <input class="datepicker" type="date" id="birthday"></input>
+                                    <input class="datepickerr" type="date" min="2021-08-01" id="birthday"></input>
                                 </div>
                             </div>
 
-                            <input hidden id="state">
 
-                            <!--gift ideas 
-                            <div class="field">
-                              <label class="label">Gift Ideas</label>
-                              <div class="control">
-                                <textarea class="textarea is-medium" id="profileid" placeholder="jot down gift ideas here"></textarea>
-                              </div>
-                              <div class="control">
-                                <button class="button is-link is-fullwidth has-text-weight-medium is-medium" onclick="saveChanges()">Save Changes</button>
-                              </div>
-                            </div>-->
+                            
 
 
                         </section>

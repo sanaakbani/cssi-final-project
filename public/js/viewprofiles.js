@@ -19,7 +19,7 @@ window.onload = (event) => {
     if (user) {
       console.log('Logged in as: ' + user.displayName);
       googleUserId = user.uid;
-      document.querySelector("#state").value = null;
+      
       getProfile(googleUserId);
     } else {
       // If not logged in, navigate back to login page.
@@ -33,7 +33,19 @@ const addFriendModal = () => {
 
 }
 const getProfile = (userId) => {
-  
+  var today = new Date();
+  var dd = today.getDate()+1;
+  var mm = today.getMonth()+1; //January is 0!
+  var yyyy = today.getFullYear();
+  if(dd<10){
+          dd='0'+dd
+      } 
+      if(mm<10){
+          mm='0'+mm
+      } 
+
+  today = yyyy+'-'+mm+'-'+dd;
+  document.querySelector("#birthday").setAttribute("min", today);
   console.log("logged in as user " + userId);
   const dbRef = firebase.database().ref(`users/${userId}`);
   dbRef.on('value', (snapshot) => {
@@ -48,6 +60,7 @@ const renderData = (data) => {
       //adds text on to the string already
       createCard(profile, key).then((e) => {
         destination.innerHTML+=e;
+        initializeTimer(key);
       });
   }
 };
@@ -62,8 +75,12 @@ const closeModal = () => {
 }
 
 let imageUrl;
+let birthdateFormat;
 
 const createCard = (profile, profileId) => {
+  birthdateFormat = profile.birthday;
+  console.log(birthdateFormat);
+  
   let storageRef = firebase.storage().ref();
   console.log(storageRef);
   return storageRef.child(`users/${profile.image}`).getDownloadURL()
@@ -71,8 +88,7 @@ const createCard = (profile, profileId) => {
     // `url` is the download URL for 'images/stars.jpg'// Or inserted into an <img> element
     console.log('image found', url);
     imageUrl = url;
-    birthdateFormat = profile.birthday;
-    console.log(birthdateFormat);
+    
     return `<a onclick="openProfile('${profileId}')">
               <div class="column is-one-quarter">
                 <div class="card" id="noteId"> 
@@ -84,33 +100,34 @@ const createCard = (profile, profileId) => {
                     <div class="card-content"> 
                         <div class="content">
                             <img src="${imageUrl}" alt="friend's image">
-                            <p><strong>Birthday</strong>: ${profile.birthday}</p> 
+                            <p>
+                            <strong>Upcoming Birthday</strong>: 
+                            <div id="${profileId}">
+                            ${profile.birthday}
+                            </div>
+                            </p> 
                         </div>
 
-                        <h2>Birthday Countdown!</h2>
+                        <strong>Birthday Countdown!</strong>
                          <div id="timer">
                           <div>
-                            <span class="days"></span>
-                            <div class="text">Days</div>
+                            <span class="days${profileId}"></span>
                           </div>
                           <div>
-                            <span class="hours"></span>
-                            <div class="text">Hours</div>
+                            <span class="hours${profileId}"></span>
                           </div>
                           <div>
-                            <span class="minutes"></span>
-                            <div class="text">Minutes</div>
+                            <span class="minutes${profileId}"></span>
                           </div>
                           <div>
-                            <span class="seconds"></span>
-                            <div class="text">Seconds</div>
+                            <span class="seconds${profileId}"></span>
                           </div>
                         </div>
-                          
-                        <div class = "card-footer">
+                        
+                        <div class = "card-footer mt-4">
 
                             <a href="#"
-                              class= "card-footer-item"
+                              class= "card-footer-item "
                               onclick="deleteProfile('${profileId}')">
                                 Delete</a>
                                 
@@ -185,6 +202,8 @@ const createProfile = () => {
         name: document.querySelector("#name").value,
         image: uploadedFile,
         birthday: document.querySelector("#birthday").value,
+        gifts: "",
+        message: "Hello Friend!&#13;&#10;&#13;&#10;Happy Birthday!&#13;&#10;&#13;&#10;Sincerely,&#13;&#10;Your loving friend"
     }).then(() => {
   // 3. Clear the form so that we can write a new note
     closeModal();
@@ -192,174 +211,56 @@ const createProfile = () => {
     });
 };
 
-const editProfile = (profileId) => {
-    //console.log("edit" + profileId);
-    const profileToEdit = firebase.database().ref(`users/${googleUserId}/${profileId}`);
-    profileToEdit.on("value", (snapshot) => {
-        const profile = snapshot.val();
-        
-        const name = document.querySelector("#name");
-        const fileNameLabel = document.querySelector('#imageFile #fileNameLabel');
-        const birthday = document.querySelector("#birthday");
-
-        name.value = profile.name;
-        fileNameLabel.value = profile.image;
-        birthday.value = profile.birthday;
-        //document.querySelector("#editProfileId").value = profileId;        
-        document.querySelector("#addFriendModal").classList.add("is-active");
-        document.querySelector("#state").value = profileId;
-        
-    });
-};
 
 
-
-
-
-
-
-
-
-
-
-/* addfriend /saveChanges
-const saveChanges = () => {
-    //console.log("edit" + profileId);
-    const editProfileNameInput = document.querySelector("#editProfileNameInput");
-    const editProfileTextInput = document.querySelector("#editProfileTextInput");
-    const editProfileId = document.querySelector("#editProfileId");
-
-    const name = editProfileNameInput.value;
-    const text = editProfileTextInput.value;
-    const profileId = editProfileId.value;
-
-    const profileToEdit = firebase.database().ref(`users/${googleUserId}/${profileId}`);
-    profileToEdit.update({
-        name: name,
-        text: text,
-    });
-  */
-
-// Google api console clientID and apiKey 
-
- var clientId = '693416465533-s2d3a9efrg9b7g4jequ6k4lgc40ssrgf.apps.googleusercontent.com';
- var apiKey = 'AIzaSyD1c8zNJkOLS7gGT5XUDyZCrS83m_mYbFU';
-
- // enter the scope of current project (this API must be turned on in the Google console)
-   var scopes = 'https://www.googleapis.com/auth/calendar';
-
-
-// OAuth2 functions
-     function handleClientLoad() {
-           gapi.client.setApiKey(apiKey);
-           window.setTimeout(checkAuth, 1);
-        }
-
-// function initial(){
-//   // 2. Initialize the JavaScript client library.
-//   gapi.client.init({
-//     'apiKey': apiKey,
-//     // Your API key will be automatically added to the Discovery Document URLs.
-//     'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
-//     // clientId and scope are optional if auth is not required.
-//     'clientId': clientId +'.apps.googleusercontent.com',
-//     'scope': scopes,
-//   })
-// };
-// // 1. Load the JavaScript client library.
-// gapi.load('client', initial);
-
-
-//To authenticate
-  function checkAuth() {
-    gapi.auth.authorize({ 
-    client_id: clientId, 
-    scope: scopes, immediate: true }
-  , handleAuthResult);
-        }
-
-    // // Make an API call to create an event.  Give feedback to user.
-    // var event = {
-    //   'summary': 'Birthday',
-    //   'location': 'Online',
-    //   'description': 'Birthday reminder',
-    //   'start': {
-    //     'dateTime': 'birthday' + 'T09:00:00-07:00',
-    //     'timeZone': 'America/Los_Angeles'
-    //   },
-    //   'end': {
-    //     'dateTime': 'birthday' + 'T17:00:00-07:00',
-    //     'timeZone': 'America/Los_Angeles'
-    //   },
-    //   'recurrence': [
-    //     'RRULE:FREQ=YEARLY'
-    //   ],
-    //   'attendees': [
-    //     {}
-    //   ],
-    //   'reminders': {
-    //     'useDefault': true,
-    //     'overrides': [
-    //       {'method': 'popup', 'minutes': 40320}
-    //     ]
-    //   }
-    // };
-    
-    // var request = gapi.client.calendar.event.insert({
-    //   'calendarId': 'primary',
-    //   'resource': 'event'
-    // });
-    
-    // request.execute(function(event) {
-    //   appendPre('Event created: ' + event.htmlLink);
-    // });
-
-    closeModal();
-
-  document.addEventListener('DOMContentLoaded', function() {
-    let birthday = document.getElementById('birthday');
-    let instances = M.Datepicker.init(birthday);
-  });
+  // document.addEventListener('DOMContentLoaded', function() {
+  //   let birthday = document.getElementById('birthday');
+  //   let instances = M.Datepicker.init(birthday);
+  // });
 
 
 //countdown
-function initializeTimer(endtime) {
-  console.log(document.querySelector('.days'));
-  const daysSpan = document.querySelector('.days');
-  const hoursSpan = document.querySelector('.hours');
-  const minutesSpan = document.querySelector('.minutes');
-  const secondsSpan = document.querySelector('.seconds');
+function initializeTimer(cardId) {
+  const daysSpan = document.querySelector('.days' + cardId);
+  const hoursSpan = document.querySelector('.hours' + cardId);
+  const minutesSpan = document.querySelector('.minutes' + cardId);
+  const secondsSpan = document.querySelector('.seconds' + cardId);
 
-  function updateClock() {
-    const t = countdown(endtime);
+  function updateTimer() {
+    const t = countdown(birthdateFormat);
 
-    daysSpan.innerHTML = t.days;
-    hoursSpan.innerHTML = ('0' + t.hours);
-    minutesSpan.innerHTML = ('0' + t.minutes);
-    secondsSpan.innerHTML = ('0' + t.seconds);
+    daysSpan.innerHTML = t.days + " Days";
+    hoursSpan.innerHTML = (t.hours) + " Hours";
+    minutesSpan.innerHTML = (t.minutes) + " Minutes";
+    secondsSpan.innerHTML = (t.seconds) + " Seconds";
 
   }
 
-  updateClock();
-  //const timeinterval = setInterval(updateClock, 1000);
+  updateTimer();
+  const timeinterval = setInterval(updateTimer, 1000);
 }
 
-const countdown = (birthdate) => {
-    const timeRemaining = Date.parse(birthdate) - (Date.parse(new Date()));
-    const seconds = Math.floor((timeRemaining/1000) / 60);
-    const minutes = Math.floor((timeRemaining/1000/60) / 60);
-    const hours = Math.floor((timeRemaining/(1000*60*60)) / 24);
-    const days = Math.floor((timeRemaining/(1000*60*60*24)));
+const countdown = () => {
+     const timeRemaining = (Date.parse(birthdateFormat) - Date.parse(new Date()));
+
+     let seconds = Math.floor(timeRemaining / 1000);
+     let minutes = Math.floor(seconds / 60);
+     let hours = Math.floor(minutes / 60);
+     let days = Math.floor(hours / 24);
+
+     hours %= 24;
+     minutes %= 60;
+     seconds %= 60;-0
     
-    return {
-      timeRemaining,
-      days,
-      hours,
-      minutes,
-      seconds
+     return {
+       timeRemaining,
+       days,
+       hours,
+       minutes,
+       seconds
     };
 }
 
-// console.log(birthdate);
-// initializeTimer(birthdate);
+//console.log(birthdateFormat);
+
 //

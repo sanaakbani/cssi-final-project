@@ -27,7 +27,7 @@ window.onload = (event) => {
         }
         profileId = params.get('id');
         setupPage(profileId);
-        
+        alert("In the gift ideas, seperate each gift in a different line by clicking Enter!")
       } else {
         // If not logged in, navigate back to login page.
         window.location = 'index.html'; 
@@ -42,12 +42,15 @@ window.onload = (event) => {
     dbRef.on('value', (snapshot) => {
         renderData(snapshot.val(),profileId);
     })
+    initializeTimer(profileId);
   };
 
+  let birthdateFormat;
+  let profile;
   const renderData = (data,key) => {
-    
-    const profile = data[key];
+    profile = data[key];
     console.log(profile)
+    birthdateFormat = profile.birthday;
     //adds text on to the string already
     //const birthdayLabel = document.querySelector("")
 
@@ -67,5 +70,59 @@ window.onload = (event) => {
 
     const nameLabel = document.querySelector("#name");
     nameLabel.innerHTML = profile.name;
+
+    const giftText = document.querySelector("#giftText");
+    giftText.innerHTML = profile.gifts;
+    const messageText = document.querySelector("#message");
+    messageText.innerHTML = profile.message;
     
   };
+
+
+  //countdown
+function initializeTimer(cardId) {
+  const daysSpan = document.querySelector(".daysTimer");
+
+  function updateTimer() {
+    const t = countdown(birthdateFormat);
+
+    daysSpan.innerHTML = `${t.days}d:${t.hours}h:${t.minutes}m:${t.seconds}s`;
+
+  }
+
+  updateTimer();
+  const timeinterval = setInterval(updateTimer, 1000);
+}
+
+const countdown = () => {
+     const timeRemaining = (Date.parse(birthdateFormat) - Date.parse(new Date()));
+     let seconds = Math.floor(timeRemaining / 1000);
+     let minutes = Math.floor(seconds / 60);
+     let hours = Math.floor(minutes / 60);
+     let days = Math.floor(hours / 24);
+
+     hours %= 24;
+     minutes %= 60;
+     seconds %= 60;
+    
+     return {
+       timeRemaining,
+       days,
+       hours,
+       minutes,
+       seconds
+    };
+}
+
+const saveMessage = () => {
+  const dbRef = firebase.database().ref(`users/${googleUserId}/${profileId}`);
+  dbRef.update({
+    name: profile.name,
+    birthday: profile.birthday,
+    image: profile.image,
+    gifts: document.querySelector("#giftText").value.split("\n").join('&#13;&#10;'),
+    message: document.querySelector("#message").value.split("\n").join('&#13;&#10;')
+  }).then(() => {
+    alert('Done')
+  })
+}
